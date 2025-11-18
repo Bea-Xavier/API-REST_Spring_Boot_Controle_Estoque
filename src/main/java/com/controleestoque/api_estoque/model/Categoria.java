@@ -37,7 +37,7 @@ public class Categoria {
     public void setId(Long id) { this.id = id; }
     public String getNome() { return nome; }
     public void setNome(String nome) { this.nome = nome; }
-    public List<Produto> geProdutos() { return produtos; }
-    public void setProdutos(List<Produtos> produtos) { this.produtos = produtos; }
+    public List<Produto> getProdutos() { return produtos; }
+    public void setProdutos(List<Produto> produtos) { this.produtos = produtos; }
     
 }

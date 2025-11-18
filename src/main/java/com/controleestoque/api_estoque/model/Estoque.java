@@ -1,5 +1,14 @@
 package com.controleestoque.api_estoque.model;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
+
 @Entity
 @Table(name = "tb_estoques")
 public class Estoque {

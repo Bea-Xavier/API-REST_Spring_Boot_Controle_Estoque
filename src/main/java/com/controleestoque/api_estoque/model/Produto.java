@@ -3,7 +3,21 @@ package com.controleestoque.api_estoque.model;
 import java.math.BigDecimal;
 import java.util.Set;
 
-@Entity@Table(name = "tb_produtos")
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
+import jakarta.persistence.JoinTable;
+
+@Entity
+@Table(name = "tb_produtos")
 public class Produto { 
 
     @Id
