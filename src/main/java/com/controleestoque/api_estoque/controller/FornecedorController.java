@@ -22,7 +22,7 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("/api/fornecedores")
 @RequiredArgsConstructor
-public class FonecedorController {
+public class FornecedorController {
     
     private final FornecedorRepository fornecedorRepository;
 
@@ -42,7 +42,7 @@ public class FonecedorController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED) // Retorna código 201 (Created).
-    public Fornecedor createFonecedor(@RequestBody Fornecedor fornecedor) {
+    public Fornecedor createFornecedor(@RequestBody Fornecedor fornecedor) {
         // Salva um novo fornecedor no banco de dados.
         return fornecedorRepository.save(fornecedor);
     }

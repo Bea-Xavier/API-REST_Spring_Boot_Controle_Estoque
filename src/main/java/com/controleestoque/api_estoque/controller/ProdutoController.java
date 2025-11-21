@@ -1,19 +1,19 @@
 package com.controleestoque.api_estoque.controller;
 
 import java.util.List;
-import java.util.Set;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.controleestoque.api_estoque.model.Fornecedor;
 import com.controleestoque.api_estoque.model.Produto;
 import com.controleestoque.api_estoque.repository.ProdutoRepository;
 
@@ -53,7 +53,7 @@ public class ProdutoController {
     // e seus IDs são passados no corpo da requisição (ProdutoDTO seria ideal aqui).
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    puublic ResponseEntity<Produto> createProduto(@RequestBody Produto produto) {
+    public ResponseEntity<Produto> createProduto(@RequestBody Produto produto) {
         // 1. Gerenciamento do 1:N (Categoria)
         // A categoria deve ser buscada para garantir que existe e estar no contexto de persistência.
         if (produto.getCategoria() == null || produto.getCategoria().getId() == null) {
