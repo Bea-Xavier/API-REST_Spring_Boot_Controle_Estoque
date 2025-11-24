@@ -53,6 +53,15 @@ public class Produto {
     )
     private Set<Fornecedor> fornecedores;
 
+    // Relação de produtos com vendas
+    @ManyToMany
+    @JoinTable(
+        name = "tb_itensVenda",
+        joinColumns = @JoinColumn(name = "produto_id"), 
+        inverseJoinColumns = @JoinColumn(name = "venda_id")
+    )
+    private Set<Venda> vendas;
+
     // Construtores, Getters e Setters...
     public Produto() {}
 
@@ -76,4 +85,7 @@ public class Produto {
     public void setCategoria(Categoria categoria) { this.categoria = categoria; }
     public Set<Fornecedor> getFornecedores() { return fornecedores; }
     public void setFornecedores(Set<Fornecedor> fornecedores) { this.fornecedores = fornecedores; }
+    public Set<Venda> getVendas() { return vendas; }
+    public void setVendas(Set<Venda> vendas) { this.vendas = vendas;}
+    
 }
