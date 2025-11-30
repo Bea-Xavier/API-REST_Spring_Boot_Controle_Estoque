@@ -12,6 +12,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.JoinTable;
@@ -53,24 +54,20 @@ public class Produto {
     )
     private Set<Fornecedor> fornecedores;
 
-    // Relação de produtos com vendas
-    @ManyToMany
-    @JoinTable(
-        name = "tb_itensVenda",
-        joinColumns = @JoinColumn(name = "produto_id"), 
-        inverseJoinColumns = @JoinColumn(name = "venda_id")
-    )
-    private Set<Venda> vendas;
+    // Relação de produtos itensVenda
+    @OneToMany(mappedBy = "produto", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private Set<ItensVenda> itensVendas;
 
     // Construtores, Getters e Setters...
     public Produto() {}
 
-    public Produto(String nome, BigDecimal preco, Estoque estoque, Categoria categoria, Set<Fornecedor> fornecedores) {
+    public Produto(String nome, BigDecimal preco, Estoque estoque, Categoria categoria, Set<Fornecedor> fornecedores, Set<ItensVenda> itensVendas) {
         this.nome = nome;
         this.preco = preco;
         this.estoque = estoque;
         this.categoria = categoria;
         this.fornecedores = fornecedores;
+        this.itensVendas = itensVendas;
     }
 
     public Long getId() { return id; }
@@ -85,7 +82,7 @@ public class Produto {
     public void setCategoria(Categoria categoria) { this.categoria = categoria; }
     public Set<Fornecedor> getFornecedores() { return fornecedores; }
     public void setFornecedores(Set<Fornecedor> fornecedores) { this.fornecedores = fornecedores; }
-    public Set<Venda> getVendas() { return vendas; }
-    public void setVendas(Set<Venda> vendas) { this.vendas = vendas;}
+    public Set<ItensVenda> getItensVendas() { return itensVendas; }
+    public void setItensVendas(Set<ItensVenda> itensVendas) { this.itensVendas = itensVendas; }
     
 }

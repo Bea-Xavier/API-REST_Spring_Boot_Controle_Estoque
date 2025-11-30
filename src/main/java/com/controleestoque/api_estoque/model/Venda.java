@@ -3,6 +3,7 @@ package com.controleestoque.api_estoque.model;
 import java.math.BigDecimal;
 import java.util.Set;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -10,6 +11,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -28,6 +30,10 @@ public class Venda {
     @JoinColumn(name = "cliente_id", nullable = false)
     private Cliente cliente;
 
+    // Relação com o itensVenda
+    @OneToMany(mappedBy = "venda", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private Set<ItensVenda> itensVenda;
+
     public Venda() {}
 
     public Venda(String data, BigDecimal valorTotal, Set<Produto> produtos, Cliente cliente) {
@@ -44,5 +50,18 @@ public class Venda {
     public void setValorTotal(BigDecimal valorTotal) { this.valorTotal = valorTotal; }
     public Cliente getCliente() { return cliente; }
     public void setCliente(Cliente cliente) { this.cliente = cliente; }
+    public Set<ItensVenda> getItensVenda() { return itensVenda; }
+    public void setItensVenda(Set<ItensVenda> itensVenda) { this.itensVenda = itensVenda; }
+
+    // Helper 
+    public void addItem(ItensVenda item) {
+        itensVenda.add(item);
+        item.setVenda(this);
+    }
+
+    public void removeItem(ItensVenda item) {
+        itensVenda.remove(item);
+        item.setVenda(null);
+    }
     
 }
