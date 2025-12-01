@@ -1,21 +1,13 @@
 package com.controleestoque.api_estoque.model;
 
 import java.math.BigDecimal;
+import java.util.HashSet;
 import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Entity
@@ -29,24 +21,23 @@ public class Venda {
     private String data;
     private BigDecimal valorTotal;
 
-    // Relação com clientes
     @ManyToOne(fetch = FetchType.LAZY) 
     @JoinColumn(name = "cliente_id", nullable = false)
     private Cliente cliente;
 
-    // Relação com o itensVenda
     @OneToMany(mappedBy = "venda", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    @JsonManagedReference
-    private Set<ItensVenda> itensVenda;
+    @JsonManagedReference(value = "venda-itens")
+    private Set<ItensVenda> itensVenda = new HashSet<>();
 
     public Venda() {}
 
-    public Venda(String data, BigDecimal valorTotal, Set<Produto> produtos, Cliente cliente) {
+    public Venda(String data, BigDecimal valorTotal, Cliente cliente) {
         this.data = data;
         this.valorTotal = valorTotal;
         this.cliente = cliente;
     }
 
+    // getters / setters...
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
     public String getData() { return data; }
@@ -58,7 +49,6 @@ public class Venda {
     public Set<ItensVenda> getItensVenda() { return itensVenda; }
     public void setItensVenda(Set<ItensVenda> itensVenda) { this.itensVenda = itensVenda; }
 
-    // Helper 
     public void addItem(ItensVenda item) {
         itensVenda.add(item);
         item.setVenda(this);
@@ -68,5 +58,4 @@ public class Venda {
         itensVenda.remove(item);
         item.setVenda(null);
     }
-    
 }

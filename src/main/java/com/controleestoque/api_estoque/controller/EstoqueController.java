@@ -3,16 +3,12 @@ package com.controleestoque.api_estoque.controller;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.controleestoque.api_estoque.model.Estoque;
@@ -52,24 +48,6 @@ public class EstoqueController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    // POST /api/estoques
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<Estoque> createEstoque(@RequestBody Estoque estoque) {
-        // Verifica se o produto associado existe.
-        if (estoque.getProduto() == null || estoque.getProduto().getId() == null) {
-            return ResponseEntity.badRequest().build(); // Produto é obrigatório.
-        }
-
-        return produtoRepository.findById(estoque.getProduto().getId())
-                .map(produto -> {
-                    estoque.setProduto(produto); // Associa o produto gerenciado.
-                    Estoque savedEstoque = estoqueRepository.save(estoque);
-                    return ResponseEntity.status(HttpStatus.CREATED).body(savedEstoque);
-                })
-                .orElse(ResponseEntity.badRequest().build());
-    }
-
     // PUT /api/estoques/{id}
     @PutMapping("/{id}")
     public ResponseEntity<Estoque> updateEstoque(@PathVariable Long id, @RequestBody Estoque estoqueDetails) {
@@ -82,16 +60,5 @@ public class EstoqueController {
                     return ResponseEntity.ok(updatedEstoque);
                 })
                 .orElse(ResponseEntity.notFound().build());
-    }
-
-    // DELETE /api/estoques/{id}
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteEstoque(@PathVariable Long id) {
-        // Tenta encontrar e deletar o estoque.
-        if (!estoqueRepository.existsById(id)) {
-            return ResponseEntity.notFound().build();
-        }
-        estoqueRepository.deleteById(id);
-        return ResponseEntity.noContent().build(); // Retorna código 204 (No Content).
     }
 }

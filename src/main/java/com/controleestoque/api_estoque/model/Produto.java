@@ -3,6 +3,7 @@ package com.controleestoque.api_estoque.model;
 import java.math.BigDecimal;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.CascadeType;
@@ -59,6 +60,7 @@ public class Produto {
 
     // Relação de produtos itensVenda
     @OneToMany(mappedBy = "produto", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JsonIgnore
     private Set<ItensVenda> itensVendas;
 
     // Construtores, Getters e Setters...

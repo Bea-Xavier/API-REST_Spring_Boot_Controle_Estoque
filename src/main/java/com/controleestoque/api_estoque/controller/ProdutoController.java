@@ -1,6 +1,7 @@
 package com.controleestoque.api_estoque.controller;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
@@ -26,16 +27,17 @@ import com.controleestoque.api_estoque.repository.FornecedorRepository;
 @RequiredArgsConstructor
 @RequestMapping("/api/produtos")
 public class ProdutoController {
-    
+
     private final ProdutoRepository produtoRepository;
     private final CategoriaRepository categoriaRepository;
     private final FornecedorRepository fornecedorRepository;
     // Estoque é geralmente via produto ou separadamente.
 
     // GET /api/produtos
-     @GetMapping
+    @GetMapping
     public List<Produto> getAllProdutos() {
-        // Retorna a lista de produtos. Pode ser necessário configurar DTOs para evitar loops infinitos com JSON.
+        // Retorna a lista de produtos. Pode ser necessário configurar DTOs para evitar
+        // loops infinitos com JSON.
         return produtoRepository.findAll();
     }
 
@@ -54,33 +56,30 @@ public class ProdutoController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<Produto> createProduto(@RequestBody Produto produto) {
-        // 1. Gerenciamento do 1:N (Categoria)
-        // A categoria deve ser buscada para garantir que existe e estar no contexto de persistência.
+        // Valida e associa a categoria
         if (produto.getCategoria() == null || produto.getCategoria().getId() == null) {
-            return ResponseEntity.badRequest().build(); // Categoria é obrigatória.   
+            return ResponseEntity.badRequest().body(null); // Categoria é obrigatória
         }
-        categoriaRepository.findBy(produto.getCategoria().getId())
-        .ifPresent(produto::setCategoria); //Associa a categoria gerenciada.
+        categoriaRepository.findById(produto.getCategoria().getId())
+                .ifPresentOrElse(produto::setCategoria, () -> {
+                    throw new IllegalArgumentException("Categoria não encontrada");
+                });
 
-        // 2. Gerenciamento do N:M (Fornecedores)
-        // Busca todos os fornecedores pelos IDs fornecidos.
-         if (produto.getFornecedores() != null && !produto.getFornecedores().isEmpty()) {
-            // Cria um Set para armazenar fornecedores gerenciados.
-            produto.getFornecedores().clear();  
-
-            // Aqui em um projeto real, seria buscado cada fornecedor individualmente.
-            // ou usuando um método customizado no repositório.
-            // Exemplo simplificado:
-            produto.getFornecedores().forEach(fornecedor -> {
-                fornecedorRepository.findById(fornecedor.getId())
-                .ifPresent(produto.getFornecedores()::add); // Adiciona fornecedor gerenciado.
-            });
+        // Valida e associa os fornecedores
+        if (produto.getFornecedores() != null && !produto.getFornecedores().isEmpty()) {
+            produto.setFornecedores(produto.getFornecedores().stream()
+                    .map(fornecedor -> fornecedorRepository.findById(fornecedor.getId())
+                            .orElseThrow(() -> new IllegalArgumentException("Fornecedor não encontrado")))
+                    .collect(Collectors.toSet()));
         }
 
-        // 3. Salva o Produto (e o Estoque, se o CASCADE estiver configurado).
+        // Configura o estoque (se necessário)
+        if (produto.getEstoque() != null) {
+            produto.getEstoque().setProduto(produto); // Relaciona o estoque ao produto
+        }
 
+        // Salva o produto
         Produto savedProduto = produtoRepository.save(produto);
-
         return ResponseEntity.status(HttpStatus.CREATED).body(savedProduto);
     }
 

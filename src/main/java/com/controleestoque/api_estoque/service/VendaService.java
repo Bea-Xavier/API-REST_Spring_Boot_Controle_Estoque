@@ -28,6 +28,7 @@ public class VendaService {
 
     @Transactional
     public Venda registrarVenda(VendaRequest req) {
+        
         // 1) valida cliente
         Cliente cliente = clienteRepository.findById(req.getClienteId())
                 .orElseThrow(() -> new ResponseStatusException(BAD_REQUEST, "Cliente não encontrado"));
@@ -40,7 +41,7 @@ public class VendaService {
         BigDecimal total = BigDecimal.ZERO;
 
         // 2) para cada item: verifica estoque, baixa, cria ItensVenda
-        for (ItemVendaRequest itemReq : req.getItens()) {
+        for (ItemVendaRequest itemReq : req.getItensVenda()) {
             Produto produto = produtoRepository.findById(itemReq.getProdutoId())
                     .orElseThrow(() -> new ResponseStatusException(BAD_REQUEST,
                             "Produto não encontrado: " + itemReq.getProdutoId()));
@@ -57,6 +58,7 @@ public class VendaService {
                 // lança exception -> rollback automático por @Transactional
                 throw new ResponseStatusException(BAD_REQUEST,
                         "Estoque insuficiente para produto: " + produto.getNome() + " (id=" + produto.getId() + ")");
+                
             }
 
             // baixa no estoque

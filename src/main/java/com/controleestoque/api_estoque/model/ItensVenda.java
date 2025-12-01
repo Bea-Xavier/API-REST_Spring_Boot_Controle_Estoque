@@ -3,18 +3,9 @@ package com.controleestoque.api_estoque.model;
 import java.math.BigDecimal;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Entity
 @Table(name = "tb_itens_venda")
 public class ItensVenda {
@@ -23,18 +14,21 @@ public class ItensVenda {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // Relação com produto
     @ManyToOne(fetch = FetchType.LAZY) 
     @JoinColumn(name = "produto_id", nullable = false)
+    // Se você quiser que o produto não traga itens ao serializar, pode usar JsonBackReference aqui.
+    @JsonBackReference(value = "produto-itens")
     private Produto produto;
 
-    // Relação com venda
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "venda_id", nullable = false)
-    @JsonBackReference
+    @JsonBackReference(value = "venda-itens")
     private Venda venda;
 
+    @Column(nullable = false)
     private Integer quantidade;
+
+    @Column(name = "preco_unitario", precision = 18, scale = 2, nullable = false)
     private BigDecimal precoUnitario;
 
     public ItensVenda() {}
@@ -46,6 +40,7 @@ public class ItensVenda {
         this.precoUnitario = precoUnitario;
     }
 
+    // getters / setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
     public Produto getProduto() { return produto; }
@@ -56,5 +51,4 @@ public class ItensVenda {
     public void setQuantidade(Integer quantidade) { this.quantidade = quantidade; }
     public BigDecimal getPrecoUnitario() { return precoUnitario; }
     public void setPrecoUnitario(BigDecimal precoUnitario) { this.precoUnitario = precoUnitario; }
-
 }
