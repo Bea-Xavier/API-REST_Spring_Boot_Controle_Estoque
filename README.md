@@ -76,14 +76,22 @@ spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL8Dialect
 
 ## 🖥️ Como Inicializar o Projeto
 
-🔧 1. Instalar Dependências
+🛠️ 1. Faça um clone do repositório na sua máquina:
+```bash
+git clone https://github.com/Bea-Xavier/API-REST_Spring_Boot_Controle_Estoque.git
+```
 
+📁 2. Abra o arquivo em um ambiente de desenvolvimento de sua escolha
+```bash
+cd API-REST_Spring_Boot_Controle_Estoque
+```
+
+🔧 3. Instale as Dependências (não obrigatório)
 ```bash
 mvn clean install
 ```
 
-
-▶ 2. Executar a API
+▶ 4. Execute a API
 
 ```bash
 mvn spring-boot:run
@@ -110,7 +118,7 @@ Use Postman / Insomnia / Thunder Client (VSCode) para testar os endpoints.
 
 ---
 
-## ❗Validação automática de estoque
+## ❗ Validação automática de estoque
 
 Se tentar vender mais que o disponível, a API retorna:
 
@@ -126,15 +134,10 @@ Se tentar vender mais que o disponível, a API retorna:
 
 *Nome:* [Beatriz V. Xavier](https://github.com/Bea-Xavier)
 
-*Tecnologias:* Java
+*Tecnologias:* 
 
-
-![Java](https://github.com/tandpfun/skill-icons/blob/main/icons/Java-Dark.svg)
-
-
-
-Spring Boot | MariaDB
+[![My Skills](https://skillicons.dev/icons?i=java,spring,postman,hibernate&theme=dark)](https://skillicons.dev)
 
 ## 📄 Licença
 
-Este projeto é livre para fins acadêmicos e de estudo. Sinta-se à vontade para melhorar e expandir. 🚀
+Este projeto é apenas para fins acadêmicos e de estudo. 🚀
