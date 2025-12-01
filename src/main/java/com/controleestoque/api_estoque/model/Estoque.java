@@ -1,5 +1,8 @@
 package com.controleestoque.api_estoque.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
@@ -9,6 +12,7 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Entity
 @Table(name = "tb_estoques")
 public class Estoque {
@@ -23,6 +27,7 @@ public class Estoque {
     // É o lado 'proprietário' que contém a chave estrangeira (FK).
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "produto_id", nullable = false) // Define a FK na tabela tb_estoques.
+    @JsonIgnore
     private Produto produto;
 
     // Construtores, Getters e Setters...

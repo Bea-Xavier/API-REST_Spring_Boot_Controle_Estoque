@@ -2,14 +2,19 @@ package com.controleestoque.api_estoque.model;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Entity
 @Table(name = "tb_categorias")
 public class Categoria {
@@ -22,7 +27,8 @@ public class Categoria {
 
     // --- Relacionamento 1:N (One-To-Many) ---
     // É o lado '1' do relacionamento. 'mappedBy' aponta para o campo em Produto. 
-    @OneToMany(mappedBy = "categoria", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "categoria", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<Produto> produtos;
 
     // Construtores, Getters e Setters...
